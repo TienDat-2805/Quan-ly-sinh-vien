@@ -36,4 +36,4 @@ try {
     if ($SkipTests) { $mavenArgs += '-DskipTests' }
     Invoke-CheckedNative -Executable (Join-Path $projectRoot 'mvnw.cmd') -Arguments $mavenArgs
 } finally { Pop-Location }
-Write-Output 'Build complete. Run scripts/start.ps1 to launch Educare.'
+Write-Output 'Build complete. Run start.cmd to launch Educare.'

@@ -25,11 +25,12 @@ Frontend React/TypeScript theo `frontend-design-spec.md`, backend Spring Boot 3.
 4. Từ thư mục gốc dự án, chạy:
 
    ```powershell
-   powershell -ExecutionPolicy Bypass -File .\scripts\build.ps1
-   powershell -ExecutionPolicy Bypass -File .\scripts\start.ps1
+   .\start.cmd
    ```
 
-5. Mở **http://127.0.0.1:8080/test/**.
+   Có thể nhấp đúp `start.cmd` trong File Explorer. Lệnh tự build nếu chưa có JAR, chạy backend và mở trình duyệt tại **http://127.0.0.1:8080/test/** khi ứng dụng sẵn sàng. Nếu ứng dụng đang chạy, lệnh chỉ mở lại trang web. Giữ terminal chạy ứng dụng; nhấn Ctrl+C để dừng.
+
+5. Sau khi sửa code, dừng ứng dụng bằng Ctrl+C rồi build lại bằng `.\start.cmd -Build`. Để chạy mà không tự mở trình duyệt, dùng `powershell -ExecutionPolicy Bypass -File .\scripts\start.ps1`.
 
 Tài khoản phát triển mặc định: **admin@educare.edu.vn / admin123**. Có thể đổi mật khẩu trong Settings. Để tạo tài khoản quản trị với thông tin khác ngay lần chạy đầu, đặt `ADMIN_USERNAME` và `ADMIN_PASSWORD` trước khi khởi động; thay đổi biến môi trường không đặt lại mật khẩu của tài khoản đã tồn tại.
 
