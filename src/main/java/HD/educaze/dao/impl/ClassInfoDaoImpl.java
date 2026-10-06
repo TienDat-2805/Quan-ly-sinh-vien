@@ -37,6 +37,10 @@ public class ClassInfoDaoImpl extends HibernateGenericDao<String, ClassInfo> imp
     @Override
     public void delete(String id) {
         logger.info("Deleting ClassInfo: {}", id);
+        Long linkedClasses = getEntityManager().createQuery("SELECT COUNT(c) FROM AcademicClass c WHERE c.classInfoId = :id", Long.class).setParameter("id", id).getSingleResult();
+        if (linkedClasses > 0) {
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.CONFLICT, "This record is linked to an academic class. Delete it through the class management API.");
+        }
         deleteByPk(id);
     }
 
@@ -91,7 +95,7 @@ public class ClassInfoDaoImpl extends HibernateGenericDao<String, ClassInfo> imp
     @Override
     public List<ClassInfo> search(String query, Integer lowerLimit, Integer upperLimit, String orderBy, String orderType) {
         logger.info("Searching ClassInfo with query: {}", query);
-        return search(query, upperLimit, lowerLimit, orderBy, orderType);
+        return super.search(query, lowerLimit, upperLimit, orderBy, orderType);
     }
 
     @Override
@@ -99,7 +103,8 @@ public class ClassInfoDaoImpl extends HibernateGenericDao<String, ClassInfo> imp
         logger.info("Getting ClassInfo count");
         try {
             TypedQuery<Long> countQuery = getEntityManager()
-                    .createQuery("SELECT COUNT(c) FROM ClassInfo c", Long.class);
+                    .createQuery(query == null || query.isBlank() ? "SELECT COUNT(c) FROM ClassInfo c" : "SELECT COUNT(c) FROM ClassInfo c WHERE LOWER(c.name) LIKE :query", Long.class);
+            if (query != null && !query.isBlank()) countQuery.setParameter("query", "%" + query.toLowerCase(java.util.Locale.ROOT) + "%");
             return countQuery.getSingleResult().intValue();
         } catch (NoResultException e) {
             return 0;

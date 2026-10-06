@@ -1,0 +1,14 @@
+import { classesApi } from '../../api/class-info.api';
+import { coursesApi, lecturersApi } from '../../api/management.api';
+import { useResource } from '../../hooks/useResource';
+import type { AcademicClass } from '../../types';
+import { Drawer, ErrorState } from '../ui';
+import { RecordDrawer, type FormField } from '../ui/RecordDrawer';
+export function ClassFormDrawer({ record, onClose, onSaved }: { record?: AcademicClass; onClose: () => void; onSaved: () => void }) {
+  const resources = useResource(() => Promise.all([lecturersApi.list(), coursesApi.list()]));
+  if (!resources.data) return <Drawer title={record ? 'Edit class' : 'Add class'} subtitle="Manage academic class information." onClose={onClose}><div className="drawer-body">{resources.error ? <ErrorState message={resources.error} retry={resources.reload} /> : <div className="skeleton detail-skeleton" />}</div></Drawer>;
+  const [lecturers, courses] = resources.data;
+  const fields: FormField[] = [{ key: 'name', label: 'Class name', required: true }, { key: 'code', label: 'Class code', required: true, maxLength: 30 }, { key: 'faculty', label: 'Faculty', required: true }, { key: 'lecturerId', label: 'Lecturer', type: 'select', options: [{ value: '', label: 'Unassigned' }, ...lecturers.map(l => ({ value: String(l.id), label: l.name }))] }, { key: 'advisor', label: 'Advisor name (if lecturer unassigned)', required: true, maxLength: 100 }, { key: 'courseId', label: 'Associated course', type: 'select', options: [{ value: '', label: 'No course assigned' }, ...courses.map(c => ({ value: String(c.id), label: `${c.code} · ${c.name}` }))] }, { key: 'cohort', label: 'Enrollment year', type: 'number', required: true, min: 2000, max: 2100 }, { key: 'capacity', label: 'Maximum students', type: 'number', required: true, min: 1, max: 500 }];
+  const initial = record ? { name: record.name, code: record.code, faculty: record.faculty, lecturerId: String(record.lecturerId || ''), advisor: record.advisor, courseId: String(record.courseId || ''), cohort: String(record.cohort), capacity: String(record.capacity) } : { name: '', code: '', faculty: 'Information Technology', lecturerId: '', advisor: '', courseId: '', cohort: String(new Date().getFullYear()), capacity: '45' };
+  return <RecordDrawer title={record ? 'Edit class' : 'Add class'} subtitle={record ? 'Update class information.' : 'Create a new academic class.'} fields={fields.map(f => f.key === 'advisor' ? { ...f, required: false } : f)} initial={initial} onClose={onClose} onSaved={onSaved} onSave={v => classesApi.save(record?.id, { name: v.name, code: v.code, faculty: v.faculty, advisor: lecturers.find(l => String(l.id) === v.lecturerId)?.name || v.advisor, lecturerId: v.lecturerId ? Number(v.lecturerId) : null, courseId: v.courseId ? Number(v.courseId) : null, cohort: Number(v.cohort), capacity: Number(v.capacity) })} />;
+}

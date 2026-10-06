@@ -7,4 +7,11 @@
 /.settings/
 .env
 .env.*
+!.env.example
+*.tsbuildinfo
 /src/main/resources/application.properties
+/.tools/
+/logs/
+/frontend/node_modules/
+/frontend/dist/
+*.log

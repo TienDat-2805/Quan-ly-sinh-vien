@@ -1,0 +1,69 @@
+CREATE TABLE IF NOT EXISTS accounts (
+  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) NOT NULL UNIQUE,
+  password VARCHAR(100) NOT NULL,
+  display_name VARCHAR(100) NOT NULL,
+  role VARCHAR(20) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS lecturers (
+  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL, email VARCHAR(150) NOT NULL UNIQUE,
+  phone VARCHAR(20) NOT NULL, faculty VARCHAR(120) NOT NULL,
+  specialty VARCHAR(120) NOT NULL, status VARCHAR(15) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS subjects (
+  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  code VARCHAR(30) NOT NULL UNIQUE, name VARCHAR(120) NOT NULL,
+  credits INT NOT NULL, faculty VARCHAR(120) NOT NULL, lecturer_id BIGINT,
+  CONSTRAINT fk_course_lecturer FOREIGN KEY (lecturer_id) REFERENCES lecturers(id)
+);
+CREATE TABLE IF NOT EXISTS academic_classes (
+  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  code VARCHAR(30) NOT NULL UNIQUE,
+  name VARCHAR(120) NOT NULL,
+  faculty VARCHAR(120) NOT NULL,
+  advisor VARCHAR(100) NOT NULL,
+  cohort INT NOT NULL,
+  capacity INT NOT NULL,
+  class_info_id VARCHAR(36) UNIQUE,
+  lecturer_id BIGINT, subject_id BIGINT,
+  CONSTRAINT fk_class_lecturer FOREIGN KEY (lecturer_id) REFERENCES lecturers(id),
+  CONSTRAINT fk_class_subject FOREIGN KEY (subject_id) REFERENCES subjects(id)
+);
+CREATE TABLE IF NOT EXISTS students (
+  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  code VARCHAR(30) NOT NULL UNIQUE,
+  name VARCHAR(100) NOT NULL,
+  gender VARCHAR(10) NOT NULL,
+  dob DATE NOT NULL,
+  email VARCHAR(150) NOT NULL UNIQUE,
+  phone VARCHAR(20) NOT NULL,
+  address VARCHAR(255),
+  status VARCHAR(15) NOT NULL,
+  class_id BIGINT NOT NULL,
+  created_at DATETIME(6) NOT NULL,
+  CONSTRAINT fk_student_class FOREIGN KEY (class_id) REFERENCES academic_classes(id)
+);
+CREATE TABLE IF NOT EXISTS grades (
+  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  student_id BIGINT NOT NULL,
+  subject_id BIGINT NOT NULL,
+  semester VARCHAR(30) NOT NULL,
+  score DECIMAL(4,2) NOT NULL,
+  CONSTRAINT uq_grade UNIQUE (student_id, subject_id, semester),
+  CONSTRAINT fk_grade_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+  CONSTRAINT fk_grade_subject FOREIGN KEY (subject_id) REFERENCES subjects(id)
+);
+CREATE TABLE IF NOT EXISTS activity_log (
+  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  type VARCHAR(20) NOT NULL,
+  message VARCHAR(255) NOT NULL,
+  created_at DATETIME(6) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS class_info (
+  id VARCHAR(36) NOT NULL PRIMARY KEY,
+  appId VARCHAR(255), createdTime DATETIME(6) NOT NULL,
+  domain VARCHAR(255), iconPath VARCHAR(2048), installationCount INT NOT NULL,
+  name VARCHAR(255) NOT NULL, review DOUBLE, reviewCount INT NOT NULL,
+  softwareType VARCHAR(255), targetOperator VARCHAR(255), templateDetailId VARCHAR(255)
+);

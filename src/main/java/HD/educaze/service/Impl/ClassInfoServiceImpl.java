@@ -34,7 +34,7 @@ public class           ClassInfoServiceImpl implements ClassInfoService {
         logger.info("Updating ClassInfo: {}", wrapper.getId());
         ClassInfo existingClassInfo = classInfoDao.getById(wrapper.getId());
         if (existingClassInfo == null) {
-            throw new RuntimeException("ClassInfo not found with id: " + wrapper.getId());
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "ClassInfo not found with id: " + wrapper.getId());
         }
         mapWrapperToEntity(wrapper, existingClassInfo);
         return classInfoDao.update(existingClassInfo);
@@ -79,7 +79,7 @@ public class           ClassInfoServiceImpl implements ClassInfoService {
         if (upperLimit == null) {
             upperLimit = 10;
         }
-        return classInfoDao.search(query, upperLimit, lowerLimit, orderBy, orderType);
+        return classInfoDao.search(query, lowerLimit, upperLimit, orderBy, orderType);
     }
 
     @Override
