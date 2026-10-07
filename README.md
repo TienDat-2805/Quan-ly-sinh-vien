@@ -1,6 +1,6 @@
 # Educare — Quản lý sinh viên
 
-Frontend React/TypeScript theo `frontend-design-spec.md`, backend Spring Boot 3.5.3 và MariaDB của XAMPP. Frontend và API được đóng gói trong cùng một file JAR; đường dẫn ứng dụng là `/test`.
+Frontend React/TypeScript theo thiết kế và đặc tả giao diện được cung cấp, backend Spring Boot 3.5.3 và MariaDB của XAMPP. Frontend và API được đóng gói trong cùng một file JAR; đường dẫn ứng dụng là `/test`.
 
 ## Yêu cầu
 
