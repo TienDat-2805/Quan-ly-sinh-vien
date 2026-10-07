@@ -9,6 +9,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+    public ResponseEntity<?> uploadTooLarge(Exception error) { return ResponseEntity.status(413).body(Map.of("message", "The upload exceeds the configured size limit.")); }
+    @ExceptionHandler(org.springframework.web.multipart.support.MissingServletRequestPartException.class)
+    public ResponseEntity<?> missingFile(Exception error) { return ResponseEntity.badRequest().body(Map.of("message", "Choose a file to upload.")); }
     @ExceptionHandler(MethodArgumentNotValidException.class) public ResponseEntity<?> validation(MethodArgumentNotValidException error) {
         Map<String, String> fields = new LinkedHashMap<>();
         error.getBindingResult().getFieldErrors().forEach(e -> fields.putIfAbsent(e.getField(), e.getDefaultMessage()));

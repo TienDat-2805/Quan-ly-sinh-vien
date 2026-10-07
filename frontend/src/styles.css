@@ -209,6 +209,28 @@ small { font-size: 12px; line-height: 18px; }
 .course-cell .class-icon { width: 31px; height: 31px; border-radius: 7px; }
 .credit-badge { padding: 4px 8px; background: #f6f7fc; border-radius: 6px; color: #9396ab; font-size: 11px; }
 .back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: #84899d; margin-bottom: 23px; }
+.profile-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.documents-section { margin-top: 24px; scroll-margin-top: 24px; }
+.documents-footer { padding: 14px 24px; font-size: 12px; color: var(--color-text-secondary); border-top: 1px solid var(--color-border); }
+.document-action-error { margin: 16px 24px; }
+.document-file-cell strong { display: block; max-width: 250px; overflow: hidden; text-overflow: ellipsis; }
+.document-owner { display: inline-block; max-width: 200px; white-space: normal; overflow-wrap: anywhere; }
+.document-version { color: var(--color-primary); font-weight: 500; }
+.document-drop-zone { border: 1px dashed #bbb9e6; border-radius: 12px; padding: 32px 15px; text-align: center; background: #fafaff; color: var(--color-primary); }
+.document-drop-zone.dragging { background: var(--color-primary-soft); border-color: var(--color-primary); }
+.document-drop-zone > svg { margin-bottom: 16px; }
+.document-drop-zone h3 { font-size: 14px; color: #565a70; }
+.document-drop-zone h3 .text-link { font-size: 14px; }
+.document-drop-zone p { margin: 12px 0 8px; font-size: 11px; color: var(--color-text-secondary); }
+.document-drop-zone small { font-size: 11px; color: #989bad; }
+.file-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.selected-documents { margin-top: 20px; }
+.selected-documents > div { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--color-border); }
+.selected-documents > div > span:nth-child(2) { flex: 1; min-width: 0; }
+.selected-documents strong { display: block; font-size: 12px; overflow-wrap: anywhere; }
+.selected-documents small { display: block; color: var(--color-text-secondary); }
+.document-storage-hint { margin-top: 24px; font-size: 12px; line-height: 20px; color: var(--color-text-secondary); }
+.document-version-hint { padding: 14px; margin-bottom: 22px; font-size: 12px; line-height: 20px; border-radius: 10px; color: var(--color-primary); background: var(--color-primary-soft); overflow-wrap: anywhere; }
 .profile-card { display: flex; align-items: center; gap: 22px; margin-bottom: 24px; padding: 28px; }
 .profile-summary { flex: 1; }
 .profile-summary h1 { font-size: 24px; line-height: 32px; }

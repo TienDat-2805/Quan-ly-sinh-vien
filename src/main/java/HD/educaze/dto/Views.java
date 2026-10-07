@@ -14,4 +14,6 @@ public final class Views {
     public record Dashboard(long students, long classes, long lecturers, long courses, List<FacultyCount> faculties, List<StudentView> recentStudents, List<ClassView> recentClasses, List<HD.educaze.model.ActivityLog> activities) {}
     public record PageView<T>(List<T> content, long totalElements, int totalPages, int page, int size) {}
     public record UserView(String username, String displayName, String role) {}
+    public record DocumentView(String id, Long studentId, String name, String owner, BigDecimal version,
+        LocalDateTime creationTime, LocalDateTime modificationTime, Boolean active, String contentType, Long sizeBytes) {}
 }

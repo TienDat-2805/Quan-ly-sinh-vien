@@ -17,3 +17,15 @@ export interface Dashboard { students: number; classes: number; lecturers: numbe
 export interface Page<T> { content: T[]; totalElements: number; totalPages: number; page: number; size: number }
 export interface ClassDetail { info: AcademicClass; students: Student[] }
 export interface GradeInput { studentId: number; subjectId: number; semester: string; score: number }
+export interface StudentDocument {
+  id: string;
+  studentId: number;
+  name: string;
+  owner: string;
+  version: number;
+  creationTime: string;
+  modificationTime: string;
+  active: boolean;
+  contentType: string;
+  sizeBytes: number;
+}

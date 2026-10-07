@@ -2,6 +2,14 @@ param([switch]$Build, [switch]$OpenBrowser)
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $jarPath = Join-Path $projectRoot 'target\educaze-0.0.1-SNAPSHOT.jar'
+$localMinioConfig = Join-Path $projectRoot '.tools\minio\credentials.json'
+if (-not $env:MINIO_ACCESS_KEY -and -not $env:MINIO_SECRET_KEY -and (Test-Path -LiteralPath $localMinioConfig)) {
+    $localMinio = Get-Content -LiteralPath $localMinioConfig -Raw | ConvertFrom-Json
+    $env:MINIO_ACCESS_KEY = $localMinio.accessKey
+    $env:MINIO_SECRET_KEY = $localMinio.secretKey
+    if (-not $env:MINIO_ENDPOINT) { $env:MINIO_ENDPOINT = $localMinio.endpoint }
+    if (-not $env:MINIO_BUCKET) { $env:MINIO_BUCKET = $localMinio.bucket }
+}
 $port = if ($env:SERVER_PORT) { $env:SERVER_PORT } else { '8080' }
 $applicationUrl = "http://127.0.0.1:$port/test/"
 if ($OpenBrowser -and -not $Build) {

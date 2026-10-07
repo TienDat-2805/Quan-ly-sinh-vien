@@ -9,21 +9,29 @@ export async function refreshCsrf() {
   csrf = await response.json() as { token: string; headerName: string };
   return csrf;
 }
-export async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
+async function checkedResponse(path: string, init: RequestInit = {}): Promise<Response> {
   const headers = new Headers(init.headers);
   const method = init.method || 'GET';
   if (!['GET', 'HEAD', 'OPTIONS'].includes(method)) {
     const token = csrf || await refreshCsrf();
     if (token) headers.set(token.headerName, token.token);
   }
-  if (init.body && !(init.body instanceof URLSearchParams)) headers.set('Content-Type', 'application/json');
+  if (init.body instanceof FormData) headers.delete('Content-Type');
+  else if (init.body && !(init.body instanceof URLSearchParams)) headers.set('Content-Type', 'application/json');
   const response = await fetch(`${BASE_URL}${path}`, { ...init, headers, credentials: 'include' });
   if (!response.ok) {
     const body: { message?: string; fields?: Record<string, string> } = await response.json().catch(() => ({}));
     throw new ApiError(body.message || 'Unable to complete this request.', response.status, body.fields);
   }
+  return response;
+}
+export async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const response = await checkedResponse(path, init);
   if (response.status === 204) return undefined as T;
   return response.headers.get('content-type')?.includes('application/json') ? await response.json() as T : await response.text() as T;
+}
+export async function requestBlob(path: string): Promise<Blob> {
+  return (await checkedResponse(path)).blob();
 }
 export function queryString(params: Record<string, string | number | undefined>) {
   const query = new URLSearchParams();

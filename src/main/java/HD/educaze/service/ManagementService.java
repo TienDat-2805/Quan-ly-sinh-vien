@@ -23,14 +23,16 @@ public class ManagementService {
     private final GradeRepository grades;
     private final ActivityLogRepository activities;
     private final EntityManager em;
+    private final DocumentRepository documents;
     public ManagementService(StudentRepository students, AcademicClassRepository classes, LecturerRepository lecturers,
-                             SubjectRepository subjects, GradeRepository grades, ActivityLogRepository activities, EntityManager em) {
+                             SubjectRepository subjects, GradeRepository grades, ActivityLogRepository activities, EntityManager em, DocumentRepository documents) {
         this.students = students; this.classes = classes; this.lecturers = lecturers; this.subjects = subjects;
         this.grades = grades; this.activities = activities; this.em = em;
+        this.documents = documents;
     }
     private ResponseStatusException missing(String entity) { return new ResponseStatusException(HttpStatus.NOT_FOUND, entity + " not found."); }
     private void conflict(String message) { throw new ResponseStatusException(HttpStatus.CONFLICT, message); }
-    public void log(String type, String message) { ActivityLog a = new ActivityLog(); a.setType(type); a.setMessage(message); activities.save(a); }
+    public void log(String type, String message) { ActivityLog a = new ActivityLog(); a.setType(type); int characters = message.codePointCount(0, message.length()); a.setMessage(characters > 255 ? message.substring(0, message.offsetByCodePoints(0, 255)) : message); activities.save(a); }
     public static double points(double score) {
         return score >= 8.5 ? 4 : score >= 8 ? 3.5 : score >= 7 ? 3 : score >= 6.5 ? 2.5 : score >= 5.5 ? 2 : score >= 5 ? 1.5 : score >= 4 ? 1 : 0;
     }
@@ -82,6 +84,7 @@ public class ManagementService {
     }
     public void deleteStudent(Long id) {
         Student s = students.findById(id).orElseThrow(() -> missing("Student"));
+        if (documents.existsByStudentId(id)) conflict("This student has document history and cannot be deleted.");
         grades.deleteByStudentId(id); grades.flush(); students.delete(s); log("STUDENT", "Deleted student " + s.getName());
     }
     private List<StudentView> roster(Long id) { return students.findAll((root, query, cb) -> cb.equal(root.get("academicClass").get("id"), id)).stream().map(this::studentView).toList(); }

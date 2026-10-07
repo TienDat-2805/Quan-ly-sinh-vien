@@ -6,3 +6,5 @@ spring.datasource.password=
 # Environment alternatives: DB_URL, DB_USERNAME, DB_PASSWORD.
 # Development administrator: ADMIN_USERNAME, ADMIN_PASSWORD.
 # Disable sample records with DEMO_ENABLED=false.
+# File storage: MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_BUCKET.
+# Upload limits: MAX_FILE_SIZE (20MB) and MAX_REQUEST_SIZE (50MB).
