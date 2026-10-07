@@ -10,6 +10,7 @@
 !.env.example
 *.tsbuildinfo
 /src/main/resources/application.properties
+/frontend-design-spec.md
 /.tools/
 /logs/
 /frontend/node_modules/
